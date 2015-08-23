@@ -9,7 +9,7 @@ http://ipcalc.readthedocs.org/en/latest/
 This was built with BGP scale testing in mind where a route generator may not be available. The prefix_list branch (WIP) will generate a prefix list with unique sequence IDs per prefix which can be copied into Quagga or IOS (and possibly NX-OS). It should be noted however that this functionality can basically be achieved using the optional strings and the built in sequencing of Quagga/IOS.
 
 ##### Syntax
-'''
+
 slaffer-au@mbp$ ./bgp_net_gen.py --help
 usage: bgp_net_gen.py [-h] [--first FIRST_PREFIX] [--mask MASK]
                       [--prefixes PREFIXES] [--before BEFORE] [--after AFTER]
@@ -28,10 +28,10 @@ optional arguments:
                         Text to prepend before network string
   --after AFTER, -a AFTER
                         Text to append after network string
-'''
+
 
 ##### Example
-'''
+
 slaffer-au@mbp$ ./bgp_net_gen.py -f 10.1.1.240 -m 30 -p 100 -b "ip prefix-list bgp_net_gen permit " -a " le 32"
 ip prefix-list bgp_net_gen permit 10.1.1.240/30 le 32
 ip prefix-list bgp_net_gen permit 10.1.1.244/30 le 32
@@ -55,5 +55,5 @@ ip prefix-list bgp_net_gen permit 10.1.3.8/30 le 32
 ip prefix-list bgp_net_gen permit 10.1.3.12/30 le 32
 ip prefix-list bgp_net_gen permit 10.1.3.16/30 le 32
 ip prefix-list bgp_net_gen permit 10.1.3.20/30 le 32
-'''
+
 
