@@ -35,8 +35,22 @@ The quagga_br branch injects a sequenced a sequenced ip prefix-list called "bgp_
 	                        /etc/quagga/Quagga.conf
 	
 	
-##### Example 1
-	
+##### Example 1 with no arguments
+
+	vagrant@cumulus:/vagrant$ ./bgp_net_gen.py
+	What is the first prefix? 172.16.0.0
+	What is the subnet mask in CIDR notation? 22
+	How many prefixes? 100
+	172.16.0.0/22
+	172.16.4.0/22
+	172.16.8.0/22
+	172.16.12.0/22
+	172.16.16.0/22
+	172.16.20.0/22
+	<snip>
+
+##### Example 2 with arguments
+
 	vagrant@cumulus:/vagrant$ ./bgp_net_gen.py -f 10.1.1.240 -m 30 -p 100 -b "ip prefix-list bgp_net_gen permit " -a " le 32"	
 	ip prefix-list bgp_net_gen permit 10.1.1.240/30 le 32
 	ip prefix-list bgp_net_gen permit 10.1.1.244/30 le 32
@@ -61,7 +75,7 @@ The quagga_br branch injects a sequenced a sequenced ip prefix-list called "bgp_
 	ip prefix-list bgp_net_gen permit 10.1.3.16/30 le 32
 	ip prefix-list bgp_net_gen permit 10.1.3.20/30 le 32
 
-##### Example 2 with --quagga
+##### Example 2 with --quagga argument
 
 	vagrant@cumulus:/vagrant$ sudo ./bgp_net_gen.py -f 10.1.1.240 -m 30 -p 100 -q
 	
