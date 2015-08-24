@@ -2,6 +2,7 @@
 import ipcalc
 import itertools
 import argparse
+import sys
 
 def reverse_enumerate(iterable):
     '''
@@ -51,25 +52,29 @@ def check_network(prefix):
     
     return prefix
     
-def net_print(network):
+def net_print(network, p_count):
     '''
     Print the network string and strings if set.
     '''
     network = str(network)
     
     if args.before and args.after:
-        print args.before+network+args.after
+        p_string = args.before+network+args.after
     
     elif args.before:
-        print args.before+network
+        p_string = args.before+network
     
     elif args.after:
-        print network+args.after
+        p_string = network+args.after
+    
+    elif args.quagga:
+        p_string = "ip prefix-list bgp_net_gen seq %d permit %s le 32\n" % (p_count * 10, network)
+        f_quagga.write(p_string)
     
     else:
-        print network
-    
-
+        p_string = network
+            
+    print p_string
 
  
 
@@ -83,9 +88,13 @@ try:
     parser.add_argument('--prefixes', '-p', action="store", dest="prefixes", help="Amount of prefixes")                    
     parser.add_argument('--before', '-b', action="store", dest="before", help="Text to prepend before network string")
     parser.add_argument('--after', '-a', action="store", dest="after", help="Text to append after network string")                
-    
+    parser.add_argument('--quagga', '-q', action="store_true", dest="quagga", help="Create sequenced ip prefix-list in /etc/quagga/Quagga.conf")
+
     args = parser.parse_args()  
 
+    if (args.before or args.after) and args.quagga:
+        print "\nError: Cannot use Quagga and before/after modes together.\n\n"
+        sys.exit()
 
     ### Variable Setup ###   
     if not args.first_prefix:
@@ -109,19 +118,25 @@ try:
     ### List Setup ###
     p_octets = str_to_int(first_prefix)
 
-
+    ### Quagga Setup ###
+    if args.quagga:
+        f_quagga = open('/etc/quagga/Quagga.conf', 'a+')
+        
     ### Printing Loop ###   
     while p_count < prefixes:
         
         p_count += 1
         
         network = ipcalc.Network("%s.%s.%s.%s/%s" % (p_octets[0], p_octets[1], p_octets[2], p_octets[3], mask))
-        net_print(network)
+        net_print(network, p_count)
         
         h_last = network.host_last()
         p_network = str_to_int(str(h_last))
         
         p_octets = next_network(p_network)
+    
+    if args.quagga:
+        f_quagga.close()
     
 except ValueError, e:
     print e    
