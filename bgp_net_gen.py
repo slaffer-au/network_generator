@@ -57,8 +57,14 @@ def net_print(network):
     '''
     network = str(network)
     
-    if args.before or args.after:
+    if args.before and args.after:
         print args.before+network+args.after
+    
+    elif args.before:
+        print args.before+network
+    
+    elif args.after:
+        print network+args.after
     
     else:
         print network
@@ -71,7 +77,7 @@ def net_print(network):
 try:
     
     ### Argument Parser ###
-    parser = argparse.ArgumentParser(description="Network Generator.")
+    parser = argparse.ArgumentParser(description="#### A generator of contiguous IPv4 subnet network addresses based on any specified subnet mask.")
     parser.add_argument('--first', '-f', action="store", dest="first_prefix", help="First Prefix")
     parser.add_argument('--mask', '-m', action="store", dest="mask", help="Subnet Mask in CIDR 'slash' notation")                    
     parser.add_argument('--prefixes', '-p', action="store", dest="prefixes", help="Amount of prefixes")                    
