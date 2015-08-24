@@ -2,6 +2,8 @@
 import ipcalc
 import itertools
 import argparse
+import os
+import subprocess
 
 def reverse_enumerate(iterable):
     '''
@@ -69,7 +71,8 @@ def net_print(network):
     else:
         print network
     
-
+    if args.quagga:
+        subprocess.check_call([args.before, network, args.after])
 
  
 
@@ -83,7 +86,7 @@ try:
     parser.add_argument('--prefixes', '-p', action="store", dest="prefixes", help="Amount of prefixes")                    
     parser.add_argument('--before', '-b', action="store", dest="before", help="Text to prepend before network string")
     parser.add_argument('--after', '-a', action="store", dest="after", help="Text to append after network string")                
-    
+    parser.add_argument('--quagga', '-q', action="store_true", dest="quagga", help="Send the output directly to vtysh")
     args = parser.parse_args()  
 
 
@@ -109,7 +112,9 @@ try:
     ### List Setup ###
     p_octets = str_to_int(first_prefix)
 
-
+    subprocess.check_call('vtysh')
+    subprocess.Popen('conf t')
+    
     ### Printing Loop ###   
     while p_count < prefixes:
         
